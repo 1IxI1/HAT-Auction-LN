@@ -15,8 +15,12 @@
                     <img src="assets/lot_image.png" class="card-img-top" alt="">
                     <div class="card-body">
                         <h5 class="card-title">TON Punk</h5>
-                        <p class="card-text">Это не реклама, просто самая узнаваемая коллекция даже на нашем блокчейне.</p>
-                        <a href="#" class="btn btn-primary">Сделать ставку</a>
+                        <p class="card-text">This is not an advertisement, just the most identifiable collection even on our blockchain.</p>
+                        <div class="input-group mb-3">
+                          <input type="text" class="form-control" placeholder="Bid amount" aria-label="Bid amount" aria-describedby="placeBidButton">
+                          <button class="btn btn-outline-secondary" type="button" id="placeBidButton">Place</button>
+                        </div>
+<!--                        <a href="#" class="btn btn-primary">Place bid</a>-->
                     </div>
                 </div>
             </div>
@@ -26,12 +30,8 @@
                         Loading..
                     </div>
                 </div>
-                <ul class="list-group">
-                    <li class="list-group-item active" aria-current="true">An active item</li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
+                <ul class="list-group" id="vBids">
+                    <li class="list-group-item active" aria-current="true">There are no bids, be the first</li>
                 </ul>
             </div>
         </div>
