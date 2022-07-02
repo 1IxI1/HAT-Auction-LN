@@ -2,3 +2,10 @@
 body {
     padding: 20px;
 }
+
+.content {
+    display: inline-flex;
+}
+
+.right-container { margin-left: 20px; }
+.right-container ul.list-group { margin-top: 20px; }
