@@ -1,3 +1,10 @@
+*,
+*::after,
+*::before{
+    box-sizing: border-box;
+    font-family: 'Open Sans' !important;
+/*    font-size: 32; */
+}
 
 body {
     padding: 20px;
@@ -7,9 +14,31 @@ body {
     display: inline-flex;
 }
 
+.container {
+    max-width: 1406;
+    display: flex;
+    justify-content: space-between;
+}
+
 #placeBidButton {
     color: white;
+    font-family: 'Open Sans';
+    font-weight: 600;
     background-color: green;
+}
+
+#github-button {
+    background-image: url('../images/github_image.png');
+    background-size: 155px;
+    background-position: -10px;
+    position: absolute;
+    width: 152px;
+    height: 67px;
+    left: 1311px;
+    top: 54px;
+    
+    border: 4px solid #FFFFFF;
+    border-radius: 13px;
 }
 
 .right-container { margin-left: 20px; }
