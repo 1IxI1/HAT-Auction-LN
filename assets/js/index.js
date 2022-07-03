@@ -35,7 +35,7 @@ async function update() {
             walletBalance = balance;
             vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
 
-            if (wsToken && channel == null && balance > 200000000) {
+            if (wsToken && channel == null && initStatus !== 'topUp' && balance > 200000000) {
                 channelInitState = {
                     balanceA: new BN(0),
                     balanceB: new BN(balance - 200000000),
@@ -73,6 +73,10 @@ async function update() {
                     initBalance: channelConfig.initBalanceB.toString(),
                     channelAddress: channelAddress.toString(true, true, true),
                 })
+            }
+            else if (wsToken && channel && initStatus !== 'topUp' && balance > 500000000) {
+                await customBeforeUnload();
+                window.location.reload();
             }
             else if (initStatus === "deploy") {
                 let data = await tonweb.provider.getAddressInfo(channelAddress.toString(true, true, true));
