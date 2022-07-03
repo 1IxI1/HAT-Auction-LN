@@ -1,11 +1,19 @@
 const ws = require('ws');
 const TonWeb = require('tonweb');
+const fs = require('fs');
+const https = require('https');
+const WebSocket = require('ws');
 
 const tonweb = new TonWeb(new TonWeb.HttpProvider('https://sandbox.tonhubapi.com/jsonRPC', {'apiKey': '85bd125f4999f3ffd2e4a6169f3365b107ee1d3112066301196e433509d0cf4c'}));
 const BN = TonWeb.utils.BN;
 const toNano = TonWeb.utils.toNano;
 const fromNano = TonWeb.utils.fromNano;
-const wss = new ws.Server({port: 8080});
+
+const server = new https.createServer({
+  cert: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/privkey.pem')
+});
+const wss = new WebSocket.Server({ server });
 
 // Wallet
 console.log(process.env.SERVICE_SEED);
@@ -213,4 +221,8 @@ wss.on('connection', (ws) => {
             default: return;
         }
     });
+});
+
+server.listen(8080, () => {
+    console.log('Server started');
 });
