@@ -7,6 +7,7 @@
     font-weight: 400;
     font-size: 32px;
     color: white;
+    line-height: 44px;
 }
 
 html {
@@ -30,6 +31,10 @@ span {
     transform: rotate(-180deg);
 }
 
+b {
+    font-weight: 900;
+}
+
 .content {
     display: inline-flex;
     margin-left: 145;
@@ -39,6 +44,83 @@ span {
     max-width: initial;
     display: flex;
     justify-content: space-between;
+}
+
+.act {
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 49px;
+
+}
+
+.vector {
+    position: absolute;
+    width: 580;
+    left: 54%;
+}
+
+.link {
+    color: antiquewhite; 
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.link:hover {
+    color: black;
+    background-color: white;
+}
+
+#example {
+    position: absolute;
+    width: 100%;
+    height: 1493px;
+    left: 0px;
+    top: 8507px;
+}
+
+#footer {
+    position: absolute;
+    width: 100%;
+    height: 154px;
+    left: 0px;
+    top: 1378px;
+    
+    background: rgba(134, 134, 134, 0.19);
+}
+
+#footer-link {
+    font-size: 25px;
+    color: #8F8F8F;
+}
+
+#svg1 {
+    height: 422px;
+    top: 2698px;
+}
+
+#svg2 {
+    height: 426px;
+    top: 3633px;
+}
+
+#svg3 {
+    height: 733px;
+    top: 4428px;
+}
+
+#svg4 {
+    height: 756px;
+    top: 5431px;
+}
+
+#svg5 {
+    height: 417px;
+    top: 6391px;
+}
+
+#svg6 {
+    height: 410px;
+    top: 7114px;
 }
 
 #auctioons-text {
@@ -71,6 +153,57 @@ span {
     line-height: 119px;
 
     color: #FFFFFF;
+}
+
+#ex-text {
+    position: static;
+    width: 1003px;
+    height: 119px;
+    margin-left: 145px;
+
+
+    font-family: 'Berkshire Swash';
+    font-size: 96px;
+    line-height: 119px;
+}
+
+#footer-text {
+    position: relative;
+    width: 626px;
+    height: 54px;
+    top: 17px;    
+    font-size: 25px;
+    color: #8F8F8F;
+}
+
+#lets-text {
+    position: absolute;
+    width: 715px;
+    height: 89px;
+    left: 164px;
+    top: 2317px;
+    
+    font-family: 'Berkshire Swash';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 89px;
+    
+    color: #FFFFFF; 
+}
+
+#one-more-text {
+    position: absolute;
+    width: 951px;
+    height: 80px;
+    left: 161px;
+    top: 7780px;
+
+    font-family: 'Berkshire Swash';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 80px;
 }
 
 #plain-text-1 {
@@ -114,16 +247,108 @@ span {
     top: 1775px;
 }
 
-#plain-text-6 {
+#act-text-1 {
+    position: absolute;
+    width: 100px;
+    height: 49px;
+    left: 112px;
+    top: 2436px;
+}
 
+#plain-text-6 {
+    position: absolute;
+    width: 704px;
+    height: 919px;
+    left: 123px;
+    top: 2488px;
+}
+
+#act-text-2 {
+    position: absolute;
+    width: 100px;
+    height: 49px;
+    left: 112px;
+    top: 3489px;
 }
 
 #plain-text-7 {
+    position: absolute;
+    width: 704px;
+    height: 715px;
+    left: 123px;
+    top: 3541px;
+}
 
+#act-text-3 {
+    position: absolute;
+    width: 100px;
+    height: 49px;
+    left: 112px;
+    top: 4436px;
 }
 
 #plain-text-8 {
+    position: absolute;
+    width: 704px;
+    height: 613px;
+    left: 123px;
+    top: 4488px;
+}
 
+#act-text-4 {
+    position: absolute;
+    width: 100px;
+    height: 49px;
+    left: 112px;
+    top: 5406px;
+}
+
+#plain-text-9 {
+    position: absolute;
+    width: 704px;
+    height: 707px;
+    left: 123px;
+    top: 5458px;
+}
+
+#act-text-5 {
+    position: absolute;
+    width: 100px;
+    height: 49px;
+    left: 112px;
+    top: 6366px;
+}
+
+#plain-text-10 {
+    position: absolute;
+    width: 704px;
+    height: 438px;
+    left: 123px;
+    top: 6418px;
+}
+
+#act-text-6 {
+    position: absolute;
+    width: 203px;
+    height: 49px;
+    left: 112px;
+    top: 7042px;
+}
+
+#plain-text-11 {
+    position: absolute;
+    width: 704px;
+    height: 481px;
+    left: 123px;
+    top: 7094px;
+}
+
+#plain-text-12 {
+    position: absolute;
+    width: 1201px;
+    height: 440px;
+    left: 161px;
+    top: 7860px;
 }
 
 #placeBidButton {
