@@ -1,23 +1,129 @@
 *,
 *::after,
-*::before{
+*::before {
     box-sizing: border-box;
-    font-family: 'Open Sans' !important;
-/*    font-size: 32; */
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    color: white;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    padding: 20px;
+    padding: 200px;
+}
+
+span {
+    position: absolute;
+    width: 428px;
+    height: 0px;
+    left: 145px;
+    top: 600px;
+    background-color: white;
+    
+    border: 2.5px solid white;
+    border-radius: 90px;
+    transform: rotate(-180deg);
 }
 
 .content {
     display: inline-flex;
+    margin-left: 145;
 }
 
 .container {
-    max-width: 1406;
+    max-width: initial;
     display: flex;
     justify-content: space-between;
+}
+
+#auctioons-text {
+    position: absolute;
+    width: 1050px;
+    height: 318px;
+    left: 145px;
+    top: 201px;
+    
+    font-family: 'Berkshire Swash';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 128px;
+    line-height: 159px;
+    
+    color: white;
+}
+
+#why-text {
+    position: absolute;
+    width: 847px;
+    height: 119px;
+    left: 145px;
+    top: 1035px;
+
+    font-family: 'Berkshire Swash';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 119px;
+
+    color: #FFFFFF;
+}
+
+#plain-text-1 {
+    position: absolute;
+    height: 88px;
+    left: 145px;
+    top: 681px;
+
+    line-height: 44px;
+}
+
+#plain-text-2 {
+    position: absolute;
+    width: 1158px;
+    height: 176px;
+    left: 164px;
+    top: 1214px;
+}
+
+#plain-text-3 {
+    position: absolute;
+    width: 1183px;
+    height: 88px;
+    left: 164px;
+    top: 1472px;
+}
+
+#plain-text-4 {
+    position: absolute;
+    width: 1144px;
+    height: 88px;
+    left: 164px;
+    top: 1606px;
+}
+
+#plain-text-5 {
+    position: absolute;
+    width: 1031px;
+    height: 220px;
+    left: 164px;
+    top: 1775px;
+}
+
+#plain-text-6 {
+
+}
+
+#plain-text-7 {
+
+}
+
+#plain-text-8 {
+
 }
 
 #placeBidButton {
@@ -34,12 +140,55 @@ body {
     position: absolute;
     width: 152px;
     height: 67px;
-    left: 1311px;
+    left: 85%;
     top: 54px;
+    
+    border: 4px solid white;
+    border-radius: 13px;
+
+    transition: all 0.2s;
+}
+
+#github-button:hover {
+    background-color: white;
+    background-image: url('../images/github_image_hover.png');
+}
+
+#go-button {
+    background-image: url('../images/button_text.png');
+    background-repeat: no-repeat;
+    background-size: 275px;
+    background-position: 10px;
+    position: absolute;
+    width: 313px;
+    height: 67px;
+    left: 145px;
+    top: 824px;
     
     border: 4px solid #FFFFFF;
     border-radius: 13px;
+
+    transition: all 0.2s;
+}
+
+#go-button:hover {
+    background-color: white;
+    background-image: url('../images/button_text_hover.png');
 }
 
 .right-container { margin-left: 20px; }
 .right-container ul.list-group { margin-top: 20px; }
+
+@font-face {
+    font-family: "Berkshire Swash"; 
+    src: url("../fonts/BerkshireSwash-Regular.ttf") format("truetype"); 
+    font-style: normal; 
+    font-weight: normal; 
+} 
+
+@font-face {
+    font-family: "Open Sans"; 
+    src: url("../fonts/OpenSans-VariableFont_wdth\,wght.ttf") format("truetype"); 
+    font-style: normal; 
+    font-weight: normal; 
+} 
