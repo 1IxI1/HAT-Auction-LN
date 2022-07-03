@@ -219,6 +219,18 @@ socket.onmessage = async function(event) {
         }
         case 'bidsList': {
             bids = data.bids;
+
+            let bidsContent = '';
+            if (bids.length) {
+                bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">' + bids[0].address + ' – ' + fromNano(bids[0].amount).toString() + '</li>';
+                for (let i = 1; i < bids.length; i++) {
+                    bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">' + bids[i].address + ' – ' + fromNano(bids[i].amount).toString() + '</li>';
+                }
+            } else {
+                bidsContent = 'There are no bids, be the first';
+            }
+
+            vBids.innerHTML = bidsContent;
             return;
         }
     }
