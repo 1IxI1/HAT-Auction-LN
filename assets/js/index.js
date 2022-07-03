@@ -189,7 +189,7 @@ async function placeBid() {
 
 $(document).ready(async function() {
     placeBidButton.onclick = placeBid;
-    withdrawalAllButton.onclick = withdrawalAll;
+    // withdrawalAllButton.onclick = withdrawalAll;
     console.log(tonweb);
     if (!(await wallet.methods.seqno().call())) {
         console.log('Deploy wallet..')
