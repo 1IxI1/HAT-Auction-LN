@@ -167,8 +167,13 @@ async function placeBid() {
     })
 }
 
+async function withdrawalAll() {
+
+}
+
 $(document).ready(async function() {
     placeBidButton.onclick = placeBid;
+    withdrawalAllButton.onclick = withdrawalAll;
     console.log(tonweb);
     if (!(await wallet.methods.seqno().call())) {
         console.log('Deploy wallet..')
