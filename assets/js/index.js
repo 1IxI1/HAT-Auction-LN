@@ -152,7 +152,7 @@ async function placeBid() {
 
 
     let bid = toNano(bidAmountInput.value);
-    if (bids) {
+    if (bids.length) {
         if ((new BN(bids[bids.length - 1].amount)).gt(bid)) {
             alert('Bid amount must be greater than previous');
             return;
