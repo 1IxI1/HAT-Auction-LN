@@ -251,7 +251,7 @@ socket.onopen = function() {
 }
 
 socket.onclose = function() {
-    console.log('Server not respond. Last signature: ' + tonweb.utils.bytesToBase64(serverSignature));
+    console.log('Server not respond. Last signature: ' + (serverSignature === null ? 'null' : tonweb.utils.bytesToBase64(serverSignature)));
     console.log(channelState);
     console.log('Use this for uncooperative close payment channel')
 }
