@@ -74,7 +74,7 @@ async function update() {
                     channelAddress: channelAddress.toString(true, true, true),
                 })
             }
-            else if (wsToken && channel && initStatus !== 'topUp' && balance > 500000000) {
+            else if (wsToken && channel && initStatus === 'open' && balance > 500000000) {
                 await customBeforeUnload();
                 window.location.reload();
             }
