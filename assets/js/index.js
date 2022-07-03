@@ -153,11 +153,6 @@ async function placeBid() {
         return;
     }
 
-    if (bid.gt(channelState.balanceB)) {
-        alert('Not enough balance');
-        return;
-    }
-
     channelState = {
         balanceA: channelState.balanceA.add(bid),
         balanceB: channelState.balanceB.sub(bid),
