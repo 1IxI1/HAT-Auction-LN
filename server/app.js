@@ -220,6 +220,10 @@ wss.on('connection', (ws) => {
                     hisSignature: tonweb.utils.base64ToBytes(data.signature)
                 }).send(toNano('0.05'));
             }
+            case 'initWithdrawal': {
+
+                return;
+            }
             default: return;
         }
     });

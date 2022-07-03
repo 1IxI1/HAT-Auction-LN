@@ -25,6 +25,7 @@ let channelId, channelInitState, channelConfig,
     channel, channelAddress, fromWallet, channelState, serverSignature;
 
 let bids = [];
+let myBid = 0;
 
 function send_json(data) { socket.send(JSON.stringify({...data, token: wsToken})); }
 
@@ -157,6 +158,10 @@ async function placeBid() {
             alert('Bid amount must be greater than previous');
             return;
         }
+        if (bids[bids.length - 1].amount == bid.toString()) {
+            alert('You already placed this bid');
+            return;
+        }
     }
 
     channelState = {
@@ -171,10 +176,14 @@ async function placeBid() {
         amount: bid.toString(),
         signature: tonweb.utils.bytesToBase64(signature)
     })
+    myBid = bid.toString();
 }
 
 async function withdrawalAll() {
+    send_json({
+        type: 'initWithdrawal',
 
+    })
 }
 
 $(document).ready(async function() {
@@ -230,7 +239,7 @@ socket.onmessage = async function(event) {
             if (bids.length) {
                 bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">' + bids[0].address + ' – ' + fromNano(bids[0].amount).toString() + '</li>';
                 for (let i = 1; i < bids.length; i++) {
-                    bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">' + bids[i].address + ' – ' + fromNano(bids[i].amount).toString() + '</li>';
+                    bidsContent += '<li class="list-group-item" aria-current="true" style="margin-left: 5rem;">' + bids[i].address + ' – ' + fromNano(bids[i].amount).toString() + '</li>';
                 }
             } else {
                 bidsContent = 'There are no bids, be the first';
