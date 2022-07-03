@@ -77,29 +77,31 @@
             <text id="ex-text">Try it yourself. Example.</text>
 
             <!-- МЕСТО ДЛЯ БЭКЕНДА -->
-            <div class="exampleContent">
+            <div class="exampleContent" id="ex-field">
                 <div class="left-container">
-                    <div class="card" style="width: 10rem; background-color: #001F4E;">
-                        <img src="assets/images/lot_image.jpg" class="card-img-top" alt="" style="border-radius: 12;">
+                    <div class="card" style="width: 13.5rem; background-color: #001F4E; outline: 9px solid white;">
+                        <img src="assets/images/lot_image.jpg" class="card-img-top" alt="" style="border-radius: 12; outline: 9px solid white;">
                         <div class="card-body">
                             <h5 class="card-title">Web3TON Arctic</h5>
-                            <p class="card-text">This is not an advertisement, just the most identifiable collection even on our blockchain.</p>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Bid amount" aria-label="Bid amount" aria-describedby="placeBidButton" id="bidAmountInput">
+                            <p class="card-text">This lot is for sale.
+                                Randomly picked NFT
+                                on TON.</p>
+                            <div class="input-group mb-3" style="border-radius: 12px; outline: 5px solid white;">
+                                <input type="text" class="form-control" placeholder="Bid amount" aria-label="Bid amount" aria-describedby="placeBidButton" id="bidAmountInput" style="background-color:#001F4E; color: white;">
                                 <button class="btn btn-outline-secondary" type="button" id="placeBidButton">Place</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="right-container">
-                    <div class="card" style="width: 65vw; background-color: #001F4E;">
+                    <div class="card" style="width: 32rem; background-color: #001F4E; margin-top: 120px; margin-left: 5rem;border-radius: 12px; outline: 5px solid white;">
                         <div class="card-body" id="vWalletAddress">
                             Loading...
                         </div>
                         <button type="button" class="btn btn-secondary">Secondary</button>
                     </div>
                     <ul class="list-group" id="vBids">
-                        <li class="list-group-item active" aria-current="true">There are no bids, be the first</li>
+                        <li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">There are no bids, be the first</li>
                     </ul>
                 </div>
             </div>

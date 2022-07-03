@@ -78,6 +78,14 @@ b {
     top: 8507px;
 }
 
+#ex-field {
+    position: absolute;
+    width: 1155px;
+    height: 1061px;
+    left: 145px;
+    top: 216px;
+}
+
 #footer {
     position: absolute;
     width: 100%;
