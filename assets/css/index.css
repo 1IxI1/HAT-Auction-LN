@@ -82,7 +82,7 @@ b {
     position: absolute;
     width: 1155px;
     height: 1061px;
-    left: 145px;
+    left: 50px;
     top: 216px;
 }
 
@@ -410,8 +410,8 @@ b {
 }
 
 .exampleContent { display: inline-flex; }
-.exampleContent .right-container { margin-left: 20px; }
-.exampleContent .right-container ul.list-group { margin-top: 20px; }
+.exampleContent .right-container { margin-left: 20px; width: 62vw; }
+.exampleContent .right-container ul.list-group { margin-top: 20px; width:64.5vw; }
 
 @font-face {
     font-family: "Berkshire Swash"; 

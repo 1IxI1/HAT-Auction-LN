@@ -13,7 +13,7 @@ const server = new https.createServer({
   cert: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/fullchain.pem'),
   key: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/privkey.pem')
 });
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({server});
 
 // Wallet
 console.log(process.env.SERVICE_SEED);
@@ -32,7 +32,7 @@ function send_json(ws, data) {
     } catch (e) { console.log(e); }
 }
 
-async function broadcast_bids() {
+async function broadcast_bids(options) {
     let content = [];
     for (let i = 0; i < bids.length; i++) {
         let hAddress = users[bids[i].token].walletAddress.toString(true, true, true);
@@ -41,8 +41,8 @@ async function broadcast_bids() {
             address: hAddress.slice(0, 2) + '...' + hAddress.slice(-2)
         });
     }
-    console.log(content);
     for (i in users) {
+        if (options.token != null && options.token !== i) { continue; }
         send_json(users[i].ws, {
             'type': 'bidsList',
             'bids': content
@@ -153,6 +153,7 @@ wss.on('connection', (ws) => {
                 publicKey: tonweb.utils.bytesToBase64(keyPair.publicKey),
                 channelId: users[token].channelId
             });
+            await broadcast_bids({token: token});
             return;
         }
         if (!(data.token in users)) {
@@ -201,7 +202,7 @@ wss.on('connection', (ws) => {
                     token: data.token,
                     amount: data.amount
                 })
-                await broadcast_bids();
+                await broadcast_bids({});
                 return;
             }
             case 'close': {
@@ -221,7 +222,7 @@ wss.on('connection', (ws) => {
                 }).send(toNano('0.05'));
             }
             case 'initWithdrawal': {
-
+                channelState = {};
                 return;
             }
             default: return;

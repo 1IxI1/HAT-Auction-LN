@@ -5,6 +5,7 @@ const fromNano = TonWeb.utils.fromNano;
 
 // Websocket connect
 const socket = new WebSocket('wss://auction.ex-ton.org:8080/');
+// const socket = new WebSocket('ws://localhost:8080/');
 let wsToken, servicePublicKey, serviceWallet, serviceAddress;
 
 // Load wallet from cache
@@ -34,7 +35,7 @@ async function update() {
     tonweb.getBalance(walletAddress)
         .then(async function(balance) {
             walletBalance = balance;
-            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
+            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB).toString()).toFixed(2) + ' locked)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
 
             if (wsToken && channel == null && initStatus !== 'topUp' && balance > 200000000) {
                 channelInitState = {
@@ -158,7 +159,7 @@ async function placeBid() {
             alert('Bid amount must be greater than previous');
             return;
         }
-        if (bids[bids.length - 1].amount == bid.toString()) {
+        if (bids[bids.length - 1].amount == myBid) {
             alert('You already placed this bid');
             return;
         }
@@ -179,12 +180,12 @@ async function placeBid() {
     myBid = bid.toString();
 }
 
-async function withdrawalAll() {
-    send_json({
-        type: 'initWithdrawal',
-
-    })
-}
+// async function withdrawalAll() {
+//     send_json({
+//         type: 'initWithdrawal',
+//
+//     })
+// }
 
 $(document).ready(async function() {
     placeBidButton.onclick = placeBid;
@@ -229,7 +230,7 @@ socket.onmessage = async function(event) {
         }
         case 'unfreezeBid': {
             serverSignature = tonweb.utils.base64ToBytes(data.signature);
-            channelState.seqnoA = channel.seqnoA.add(new BN(1));
+            channelState.seqnoA = channelState.seqnoA.add(new BN(1));
             return;
         }
         case 'bidsList': {
@@ -237,12 +238,13 @@ socket.onmessage = async function(event) {
 
             let bidsContent = '';
             if (bids.length) {
-                bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 5rem;">' + bids[0].address + ' – ' + fromNano(bids[0].amount).toString() + '</li>';
-                for (let i = 1; i < bids.length; i++) {
-                    bidsContent += '<li class="list-group-item" aria-current="true" style="margin-left: 5rem;">' + bids[i].address + ' – ' + fromNano(bids[i].amount).toString() + '</li>';
+                let rBids = bids.reverse();
+                bidsContent += '<li class="list-group-item active" aria-current="true" style="margin-left: 1rem;">' + rBids[0].address + ' – ' + fromNano(rBids[0].amount).toString() + '</li>';
+                for (let i = 1; i < rBids.length; i++) {
+                    bidsContent += '<li class="list-group-item" aria-current="true" style="margin-left: 1rem;">' + rBids[i].address + ' – ' + fromNano(rBids[i].amount).toString() + '</li>';
                 }
             } else {
-                bidsContent = 'There are no bids, be the first';
+                bidsContent = '<li class="list-group-item active" aria-current="true" style="margin-left: 1rem;">There are no bids, be the first</li>';
             }
 
             vBids.innerHTML = bidsContent;
