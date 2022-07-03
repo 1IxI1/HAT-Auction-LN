@@ -3,40 +3,86 @@
         <title>Auction</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link rel="stylesheet" href="assets/css/index.css">
+        <link rel="stylesheet" href="assets/css/normalize.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
         <script src="assets/js/tonweb.js"></script>
         <script src="assets/js/index.js"></script>
     </head>
-    <body>
+    <header class="header_init">
+        <div class="container">
+            <a type="button" id="github-button" href="https://github.com/1IxI1/HAT-Auction-LN"></a>
+        </div>
+    </header>
+    <body style="background-color:#001F4E;">
         <div class="content">
-            <div class="left-container">
-                <div class="card" style="width: 18rem;">
-                    <img src="assets/lot_image.png" class="card-img-top" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title">TON Punk</h5>
-                        <p class="card-text">This is not an advertisement, just the most identifiable collection even on our blockchain.</p>
-                        <div class="input-group mb-3">
-                          <input type="text" class="form-control" placeholder="Bid amount" aria-label="Bid amount" aria-describedby="placeBidButton">
-                          <button class="btn btn-outline-secondary" type="button" id="placeBidButton">Place</button>
-                        </div>
-<!--                        <a href="#" class="btn btn-primary">Place bid</a>-->
-                    </div>
-                </div>
-            </div>
-            <div class="right-container">
-                <div class="card" style="width: 60vw;">
-                    <div class="card-body" id="vWalletAddress">
-                        Loading..
-                    </div>
-                </div>
-                <ul class="list-group" id="vBids">
-                    <li class="list-group-item active" aria-current="true">There are no bids, be the first</li>
-                </ul>
+            <div id="first-section">
+                <text id="auctioons-text">Auctions with<br>Lightning Network</text>
+                <span></span>
+                <text id="plain-text-1">System that allows you to participate in ⚖️ auctions<br>without spending a fortune on commissions using <a class="link" href="https://ton.org/docs/ton.pdf#section.5">💎TON Payments.</a></text>
             </div>
         </div>
+        <div>
+            <a type="button" id="go-button" href="#example"></a>
+        </div>
+        <div>
+            <text id="why-text">Why is it important?</text>
+            <text id="plain-text-2">In order to intercept your opponent's bid in the auction for any value, at least 
+                😱 <b>2 transactions </b>are made in the blockchain:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. 🖊️ Setting a new lot price in the contract.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. ↩️ Return of funds to the owner of the previous bet.</text>
 
+            <text id="plain-text-3">And sometimes the number of bets exceeds all reasonable limits and can easily
+                step over 100, 200 and <b>even 400 bets</b> 📈.</text>
+            <text id="plain-text-4">Then, at first glance, the 🙈 <b>ridiculous fees of TON</b> may grow into ☠️ serious
+                amounts like 3, 5 or <b>10 TON</b>.</text>
+            <text id="plain-text-5">Even today, it is 💵 <b>unpleasant to pay</b> such amounts just for bidding,
+                🤕 <b>not even for buying</b>.<br><br>
+                But what will happen when a TON costs not <code>$1</code>, but, for example,
+                🤑 <b>20 US dollars</b>? It 👊 <b>hurts</b> now...</text>
+        </div>
+        <text id="lets-text">Let's take a closer look:</text>
+        <div id="docs-story">
+            <text class="act" id="act-text-1">Act 1:</text>
+            <text id="plain-text-6">Bob found an interesting lot for him at an auction and wanted to buy it. He decided for himself that he would not spend more than <code>100 TON</code> on auctions. But he can't put all the money at once, it would be stupid, so he starts with <code>1 TON</code>. Bob sends <code>100 TON</code> from his wallet to a betting wallet allocated to him by the system. This money immediately gets into the Payment Channel between this wallet and the system wallet. Next, Bob makes a bet of 1 TON and in this channel, let's call it channel #1, the balance becomes <code>[99, 1]</code>. We have already saved on <b>1 transaction</b>. Meanwhile, the system regests the leading bid from Bob in <code>1 TON</code>. On the wallet allocated to Bob by the system for bidding, let's call it B, now <code>0 TON</code>. On the wallet of the system, let's call it A, also <code>0 TON</code>. The balances of wallets created by the system, including wallet B, will always remain at 0 TON, except for a few milliseconds during the execution of the system program.</text>
+            <img class=vector id="svg1" src="assets/vectors/1_act.svg"/>
 
+            <text class="act" id="act-text-2">Act 2:</text>
+            <text id="plain-text-7">Bob was very glad that his <code>1 TON</code> bet was the only one and the leading one. But his joy was broken by Claus, who also wanted to buy this lot. Claus thought that he would not spend more than <code>50 TON</code> at these auctions, so he sent <code>50 TON</code> to the wallet C. This money, just as in the case of Bob, immediately got into the new Payment Channel #2 between the wallet C, given to Klaus by the system for bidding, and the wallet of the system A. Claus chose the <code>10 TON</code> bid and confirmed it. Channel #2 balance is now <code>[40, 10]</code>. But how is Bob? In channel #1, which is open between B and A, the balance becomes <code>[100, 0]</code> because Bob's bid was interrupted by Claus. Number of transactions saved: 4.</text>
+            <img class=vector id="svg2" src="assets/vectors/2_act.svg"/>
 
+            <text class="act" id="act-text-3">Act 3:</text>
+            <text id="plain-text-8">While Bob was thinking about what bid he should make now, Daniel burst into the auction. He decided that he would try his luck with <code>40 TON</code> one bid and if someone interrupted his bid, then he would immediately leave. He sent them to a wallet, which we will call D, similar to B and C. And immediately put everything that came there. The balance of the new channel #3 is now <code>[0, 40]</code>. At the same time, the system registered Daniel's new leading bet of <code>40 TON</code> and returned his bet to the previous leader Klaus on his balance in the channel. Channel #2 balance is now <code>[50, 0]</code>. Number of saved transactions: 6.</text>
+            <img class=vector id="svg3" src="assets/vectors/3_act.svg"/>
+
+            <text class="act" id="act-text-4">Act 4:</text>
+            <text id="plain-text-9">Claus, meanwhile, decided to play big and increase his limit to <code>120 TON</code>. He transfers another <code>70 TON</code> to the wallet C. The system sees this, closes channel #2 between C and A, because it is impossible to top up an already working channel, and opens a new channel #2.1 in place of the old one with a balance of <code>[120, 0]</code>. Claus puts <code>60 TON</code>. Channel balance #2.1 is now <code>[60, 60]</code>. The system sees that Daniel has a wallet balance for bets smaller than the current rate, understands that he will no longer be able to participate in the auction with him, completes channel #3 and returns Daniel his funds to his main wallet. Daniel does not want to bet anymore and drops out of the auction. Number of transactions saved: 7.</text>
+            <img class=vector id="svg4" src="assets/vectors/4_act.svg"/>
+
+            <text class="act" id="act-text-5">Act 5:</text>
+            <text id="plain-text-10">How's Bob? Bob sees the situation and decides to bet <code>90 TON</code> to declare his intentions for the lot. Channel #1 balance is now <code>[10, 90]</code>. In the channel of Klaus #2.1, the balance is now <code>[120, 0]</code>. Klaus saw that Bob really wants to buy this lot and decides to act like a gentleman. He gets out of the fight and withdraws funds. Channel #2.1 closes and Bob gets his <code>120 TON</code> back. The leader is now Bob again. Number of transactions saved: 10.</text>
+            <img class=vector id="svg5" src="assets/vectors/5_act.svg"/>
+
+            <text class="act" id="act-text-6">Happy end:</text>
+            <text id="plain-text-11">The auction ends after a while and Bob buys the desired lot for <code>90 TON</code>. Congratulations, Bob! You did it! 
+                Bob is refunded the balance of <code>10 TON</code>, and <code>90 TON</code> goes to the seller of the lot. Bob gets the lot. Everyone has saved as much as <b>10 transactions </b>on commissions and everyone is happy. Note that these are just small one example auction and you can try to trade in the auction yourself using testnet and the form below.</text>
+            <img class=vector id="svg6" src="assets/vectors/6_end.svg"/>
+        </div>
+        <div id="one-more">
+            <text id="one-more-text">And one more very important thing</text>
+            <text id="plain-text-12">Our auction system <b>remains anonymous until the auction ends</b>. This means that one participant will <b>not be able to view the balance</b> of another during the auction, this can be done <b>only after the auction is over</b>. Perhaps this is due to the peculiarity of <a class="link" href="https://github.com/ton-blockchain/payment-channels">Payment Channels</a>: the initial state is signed between the wallet of the system and the wallet of the user issued to him by the system for trading. The initial balance of the system is 0, so it does not need to send funds to the channel contract. This means that the current and all further, up to the end of the auction, communication with the channel takes place <b>inside the program</b> and it <b>cannot be viewed from the outside</b> without knowing the user's wallet.</text>
+        </div>
+
+        <div id="example">
+            <text id="ex-text">Try it yourself. Example.</text>
+
+            <!-- МЕСТО ДЛЯ БЭКЕНДА -->
+
+            <div id="footer">
+                <center>
+                    <text id="footer-text">Prepared for <a id="footer-link" href="https://t.me/toncontests/35">Hack-A-TON</a> by <a id="footer-link" href="https://t.me/topIXItop">@topIXItop</a> & <a id="footer-link" href="https://t.me/psylopunk">@psylopunk</a>.<br>© 2022, MIT License.<br><a id="footer-link" href="https://github.com/1IxI1/HAT-Auction-LN">GitHub.</a></text>
+                </center>
+            </div>
+        </div>
     </body>
 </html>
