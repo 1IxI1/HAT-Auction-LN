@@ -60,7 +60,7 @@ async function unfreeze_bid() {
         users[token].channelState = {
             balanceA: new BN(0),
             balanceB: channelSumValue,
-            seqnoA: users[token].channelState.seqnoA.add(new BN(1)),
+            seqnoA: users[token].channelState.seqnoA.add((new BN(1))),
             seqnoB: users[token].channelState.seqnoB
         }
         let signature = await users[token].channel.signState(users[token].channelState);
@@ -190,7 +190,7 @@ wss.on('connection', (ws) => {
                     balanceA: new BN(data.amount),
                     balanceB: new BN(channelSumValue.sub(new BN(data.amount))),
                     seqnoA: users[data.token].channelState.seqnoA,
-                    seqnoB: users[data.token].channelState.seqnoB.add(new BN(1))
+                    seqnoB: users[data.token].channelState.seqnoB.add((new BN(1)))
                 }
                 if (!(await users[data.token].channel.verifyState(users[data.token].channelState, tonweb.utils.base64ToBytes(data.signature)))) {
                     send_json(users[data.token].ws, {error: 'Invalid signature'});
@@ -206,8 +206,8 @@ wss.on('connection', (ws) => {
             }
             case 'close': {
                 console.log(users[data.token].channelState);
-                users[data.token].channelState.seqnoA = users[data.token].channelState.seqnoA.add(new BN(1));
-                users[data.token].channelState.seqnoB = users[data.token].channelState.seqnoB.add(new BN(1));
+                users[data.token].channelState.seqnoA = users[data.token].channelState.seqnoA.add((new BN(1)));
+                users[data.token].channelState.seqnoB = users[data.token].channelState.seqnoB.add((new BN(1)));
                 console.log(users[data.token].channelState);
                 console.log(users[data.token].channelState.balanceA.toString());
                 console.log(users[data.token].channelState.balanceB.toString());
