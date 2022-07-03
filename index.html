@@ -14,7 +14,7 @@
             <a type="button" id="github-button" href="https://github.com/1IxI1/HAT-Auction-LN"></a>
         </div>
     </header>
-    <body style="background-color:#001F4E;">
+    <body style="background-color:#001F4E;" onunload="customBeforeUnload()">
         <div class="content">
             <div id="first-section">
                 <text id="auctioons-text">Auctions with<br>Lightning Network</text>
@@ -77,6 +77,32 @@
             <text id="ex-text">Try it yourself. Example.</text>
 
             <!-- МЕСТО ДЛЯ БЭКЕНДА -->
+            <div class="exampleContent">
+                <div class="left-container">
+                    <div class="card" style="width: 18rem;">
+                        <img src="assets/images/lot_image.png" class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">TON Punk</h5>
+                            <p class="card-text">This is not an advertisement, just the most identifiable collection even on our blockchain.</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Bid amount" aria-label="Bid amount" aria-describedby="placeBidButton" id="bidAmountInput">
+                                <button class="btn btn-outline-secondary" type="button" id="placeBidButton">Place</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-container">
+                    <div class="card" style="width: 65vw;">
+                        <div class="card-body" id="vWalletAddress">
+                            Loading...
+                        </div>
+                        <button type="button" class="btn btn-secondary">Secondary</button>
+                    </div>
+                    <ul class="list-group" id="vBids">
+                        <li class="list-group-item active" aria-current="true">There are no bids, be the first</li>
+                    </ul>
+                </div>
+            </div>
 
             <div id="footer">
                 <center>
