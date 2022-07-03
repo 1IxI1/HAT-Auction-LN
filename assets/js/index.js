@@ -33,7 +33,7 @@ async function update() {
     tonweb.getBalance(walletAddress)
         .then(async function(balance) {
             walletBalance = balance;
-            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + ' TON</b>';
+            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
 
             if (wsToken && channel == null && balance > 200000000) {
                 channelInitState = {
