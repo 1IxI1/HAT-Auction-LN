@@ -175,9 +175,11 @@ wss.on('connection', (ws) => {
                 return;
             }
             case 'placeBid': {
-                if (data.amount < bids[bids.length - 1].amount) {
-                    send_json(ws, {error: 'Bid amount must be greater than previous'});
-                    return;
+                if (bids.length > 0) {
+                    if (data.amount < bids[bids.length - 1].amount) {
+                        send_json(ws, {error: 'Bid amount must be greater than previous'});
+                        return;
+                    }
                 }
                 unfreeze_bid();
 
