@@ -169,7 +169,7 @@ wss.on('connection', (ws) => {
                 type: 'auth',
                 token: token,
                 publicKey: tonweb.utils.bytesToBase64(keyPair.publicKey),
-                channelId: users[token].channelId
+                channelId: users[token].channelId.toString()
             });
             await broadcast_bids({token: token});
             return;
