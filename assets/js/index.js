@@ -4,8 +4,8 @@ const toNano = TonWeb.utils.toNano;
 const fromNano = TonWeb.utils.fromNano;
 
 // Websocket connect
-const socket = new WebSocket('wss://auction.ex-ton.org:8080/');
-// const socket = new WebSocket('ws://localhost:8080/');
+// const socket = new WebSocket('wss://auction.ex-ton.org:8080/');
+const socket = new WebSocket('ws://localhost:8080/');
 let wsToken, servicePublicKey, serviceWallet, serviceAddress;
 
 // Load wallet from cache
@@ -35,10 +35,21 @@ async function update() {
     tonweb.getBalance(walletAddress)
         .then(async function(balance) {
             walletBalance = balance;
-            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB || new BN(0)).toString()).toFixed(2) + ' in channel)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
+            let htmlContent = '';
+            htmlContent += 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB || new BN(0)).toString()).toFixed(2) + ' in channel)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
             if (channelState != null) {
-                vWalletAddress.innerHTML = vWalletAddress.innerHTML + '<br/>Freezed: ' + parseFloat(fromNano(channelState.balanceA).toString()).toFixed(2) + ' TON';
+                htmlContent += '<br/>Freezed: ' + parseFloat(fromNano(channelState.balanceA).toString()).toFixed(2) + ' TON';
             }
+            htmlContent += '<br>Payment Channel Status: ';
+            if (initStatus == 'wait') { htmlContent += 'disconnected'; }
+            else if (initStatus == 'deploy') { htmlContent += 'deploying contract'; }
+            else if (initStatus == 'topUp') { htmlContent += 'top up init balance'; }
+            else if (initStatus == 'waitOpen') { htmlContent += 'wait open'; }
+            else if (initStatus == 'success') { htmlContent += 'connected'; }
+            else if (initStatus == 'closed') { htmlContent += 'closed'; }
+            else { htmlContent += 'error'; }
+
+            vWalletAddress.innerHTML = htmlContent;
 
             if (wsToken && channel == null && initStatus == 'wait' && balance > 200000000) {
                 if (!(await wallet.methods.seqno().call())) {
@@ -331,7 +342,6 @@ async function customBeforeUnload() {
     if (initStatus === 'success') {
         if (channelState.balanceA.toString() != '0') {
             alert('You bid is freezed. If close page, you will lose bid amount');
-            return false;
         }
 
         channelState.seqnoA = channelState.seqnoA.add(new BN(1));

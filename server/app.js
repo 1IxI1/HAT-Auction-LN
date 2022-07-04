@@ -9,12 +9,12 @@ const BN = TonWeb.utils.BN;
 const toNano = TonWeb.utils.toNano;
 const fromNano = TonWeb.utils.fromNano;
 
-const server = new https.createServer({
-  cert: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/privkey.pem')
-});
-const wss = new WebSocket.Server({server});
-// const wss = new WebSocket.Server({port: 8080});
+// const server = new https.createServer({
+//   cert: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/fullchain.pem'),
+//   key: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/privkey.pem')
+// });
+// const wss = new WebSocket.Server({server});
+const wss = new WebSocket.Server({port: 8080});
 
 // Wallet
 console.log(process.env.SERVICE_SEED);
@@ -266,6 +266,6 @@ wss.on('connection', (ws) => {
     });
 });
 
-server.listen(8080, () => {
-    console.log('Server started');
-});
+// server.listen(8080, () => {
+//     console.log('Server started');
+// });
