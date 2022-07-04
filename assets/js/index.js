@@ -35,9 +35,12 @@ async function update() {
     tonweb.getBalance(walletAddress)
         .then(async function(balance) {
             walletBalance = balance;
-            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB).toString()).toFixed(2) + ' locked)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
+            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB).toString()).toFixed(2) + ' in channel)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
+            if (channelState != null) {
+                vWalletAddress.innerHTML = vWalletAddress.innerHTML + '<br/>Freezed: ' + parseFloat(fromNano(channelState.balanceA).toString()).toFixed(2) + ' TON';
+            }
 
-            if (wsToken && channel == null && initStatus !== 'topUp' && balance > 200000000) {
+            if (wsToken && channel == null && initStatus == 'wait' && balance > 200000000) {
                 if (!(await wallet.methods.seqno().call())) {
                     await wallet.deploy(keyPair.secretKey).send();
                     setTimeout(update, 3000);
@@ -82,7 +85,7 @@ async function update() {
                 })
             }
             else if (wsToken && channel && initStatus === 'open' && balance > 500000000) {
-                await customBeforeUnload(false);
+                await customBeforeUnload();
                 window.location.reload();
             }
             else if (initStatus === "deploy") {
@@ -164,11 +167,11 @@ async function placeBid() {
         return;
     }
     if (bids.length) {
-        if ((new BN(bids[bids.length - 1].amount)).gte(bid)) {
+        if ((new BN(bids[0].amount)).gte(bid)) {
             alert('Bid amount must be greater than previous');
             return;
         }
-        if (myBid == bids[bids.length - 1].amount) {
+        if (myBid == bids[0].amount) {
             alert('You already placed this bid');
             return;
         }
@@ -211,6 +214,7 @@ function onTonReady() {
 }
 
 $(document).ready(async function() {
+
     placeBidButton.onclick = placeBid;
     depositButton.onclick = () => { window.open('ton://transfer/' + walletAddress.toString(true, true, true), '_blank').focus(); };
     // withdrawalAllButton.onclick = withdrawalAll;
@@ -258,10 +262,12 @@ socket.onmessage = async function(event) {
         }
         case 'unfreezeBid': {
             serverSignature = tonweb.utils.base64ToBytes(data.signature);
-            channelState.seqnoA = channelState.seqnoA.add(new BN(1));
+            // channelState.seqnoA = channelState.seqnoA.add(new BN(1));
             return;
         }
         case 'upSeqno': {
+            channelState.balanceA = new BN(data.balanceA);
+            channelState.balanceB = new BN(data.balanceB);
             channelState.seqnoA = new BN(data.seqnoA);
             channelState.seqnoB = new BN(data.seqnoB);
             return;
@@ -300,7 +306,7 @@ socket.onclose = function() {
     console.log('Use this for uncooperative close payment channel')
 }
 
-async function customBeforeUnload(alertEnabled) {
+async function customBeforeUnload() {
     if (initStatus === 'success') {
         if (channelState.balanceA.toString() != '0') {
             alert('You bid is freezed. If close page, you will lose bid amount');
@@ -317,5 +323,9 @@ async function customBeforeUnload(alertEnabled) {
             'type': 'close',
             'signature': tonweb.utils.bytesToBase64(signatureClose)
         });
+        channelState = 'closed';
+    } else if (initStatus != 'wait') {
+        alert('You have not finished initialization Payment Channel. If close page, you will lose funds');
+        return false;
     }
 }

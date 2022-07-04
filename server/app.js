@@ -39,6 +39,16 @@ function send_json(ws, data) {
     } catch (e) { console.log(e); }
 }
 
+function up_state(token) {
+    send_json(users[token].ws, {
+        type: 'upSeqno',
+        balanceA: users[token].channelState.balanceA.toString(),
+        balanceB: users[token].channelState.balanceB.toString(),
+        seqnoA: users[token].channelState.seqnoA.toString(),
+        seqnoB: users[token].channelState.seqnoB.toString(),
+    });
+}
+
 async function broadcast_bids(options) {
     let content = [];
     for (let i = 0; i < bids.length; i++) {
@@ -76,6 +86,7 @@ async function unfreeze_bid() {
             signature: tonweb.utils.bytesToBase64(signature),
             newBalance: channelSumValue.toString(),
         });
+        up_state(token);
     }
 }
 
@@ -183,8 +194,10 @@ wss.on('connection', (ws) => {
                 return;
             }
             case 'placeBid': {
+                console.log('BIDS');
+                console.log(bids);
                 if (bids.length > 0) {
-                    if (data.amount < bids[bids.length - 1].amount) {
+                    if ((new BN(bids[bids.length - 1].amount)).gt(new BN(data.amount))) {
                         send_json(ws, {error: 'Bid amount must be greater than previous'});
                         return;
                     }
@@ -212,11 +225,7 @@ wss.on('connection', (ws) => {
                 let signature = await users[data.token].channel.signState(users[data.token].channelState);
 
                 users[data.token].channelState = temporaryChannelState;
-                send_json(users[data.token].ws, {
-                    type: 'upSeqno',
-                    seqnoA: temporaryChannelState.seqnoA.toString(),
-                    seqnoB: temporaryChannelState.seqnoB.toString(),
-                });
+                up_state(data.token);
 
                 bids.push({
                     token: data.token,
@@ -250,6 +259,6 @@ wss.on('connection', (ws) => {
     });
 });
 
-server.listen(8080, () => {
-    console.log('Server started');
-});
+// server.listen(8080, () => {
+//     console.log('Server started');
+// });
