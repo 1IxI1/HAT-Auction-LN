@@ -241,8 +241,8 @@ socket.onmessage = async function(event) {
 
     switch (data.type) {
         case 'auth': {
-            wsToken = data.token;
             channelId = data.channelId;
+            wsToken = data.token;
             servicePublicKey = tonweb.utils.base64ToBytes(data.publicKey);
             serviceWallet = tonweb.wallet.create({publicKey: servicePublicKey});
             serviceAddress = await serviceWallet.getAddress();
