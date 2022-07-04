@@ -4,8 +4,8 @@ const toNano = TonWeb.utils.toNano;
 const fromNano = TonWeb.utils.fromNano;
 
 // Websocket connect
-// const socket = new WebSocket('wss://auction.ex-ton.org:8080/');
-const socket = new WebSocket('ws://localhost:8080/');
+const socket = new WebSocket('wss://auction.ex-ton.org:8080/');
+// const socket = new WebSocket('ws://localhost:8080/');
 let wsToken, servicePublicKey, serviceWallet, serviceAddress;
 
 // Load wallet from cache
