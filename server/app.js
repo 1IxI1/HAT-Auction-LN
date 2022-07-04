@@ -251,7 +251,14 @@ wss.on('connection', (ws) => {
                 }).send(toNano('0.05'));
             }
             case 'initWithdrawal': {
-                channelState = {};
+                users[data.token].channelState.seqnoA = users[data.token].channelState.seqnoA.add((new BN(1)));
+                users[data.token].channelState.seqnoB = users[data.token].channelState.seqnoB.add((new BN(1)));
+                up_state(data.token);
+                let signature = await users[data.token].channel.signClose(users[data.token].channelState);
+                send_json(users[data.token].ws, {
+                    type: 'initWithdrawal',
+                    signature: tonweb.utils.bytesToBase64(signature)
+                });
                 return;
             }
             default: return;

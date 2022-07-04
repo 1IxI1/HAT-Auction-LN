@@ -22,7 +22,7 @@ var walletAddress;
 let walletBalance = '0';
 let initStatus = 'wait';
 let initIteration = 0;
-let channelId, channelInitState, channelConfig,
+let channelId, channelInitState, channelConfig, serviceInterval, provider,
     channel, channelAddress, fromWallet, channelState, serverSignature;
 
 let bids = [];
@@ -35,7 +35,7 @@ async function update() {
     tonweb.getBalance(walletAddress)
         .then(async function(balance) {
             walletBalance = balance;
-            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB).toString()).toFixed(2) + ' in channel)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
+            vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB || new BN(0)).toString()).toFixed(2) + ' in channel)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
             if (channelState != null) {
                 vWalletAddress.innerHTML = vWalletAddress.innerHTML + '<br/>Freezed: ' + parseFloat(fromNano(channelState.balanceA).toString()).toFixed(2) + ' TON';
             }
@@ -48,7 +48,7 @@ async function update() {
                 }
                 channelInitState = {
                     balanceA: new BN(0),
-                    balanceB: new BN(balance - 200000000),
+                    balanceB: new BN(balance - 250000000),
                     seqnoA: new BN(0),
                     seqnoB: new BN(0)
                 };
@@ -192,12 +192,11 @@ async function placeBid() {
     myBid = bid.toString();
 }
 
-// async function withdrawalAll() {
-//     send_json({
-//         type: 'initWithdrawal',
-//
-//     })
-// }
+async function withdrawalAll() {
+    send_json({
+        type: 'initWithdrawal'
+    })
+}
 
 function onTonReady() {
     console.log('tonready');
@@ -207,7 +206,7 @@ function onTonReady() {
         return;
     }
 
-    const provider = window.ton;
+    provider = window.ton;
     console.log('isTonWallet=', provider.isTonWallet);
 
 
@@ -217,7 +216,7 @@ $(document).ready(async function() {
 
     placeBidButton.onclick = placeBid;
     depositButton.onclick = () => { window.open('ton://transfer/' + walletAddress.toString(true, true, true), '_blank').focus(); };
-    // withdrawalAllButton.onclick = withdrawalAll;
+    withdrawalAllButton.onclick = withdrawalAll;
     console.log(tonweb);
     if (!(await wallet.methods.seqno().call())) {
         console.log('Deploy wallet..');
@@ -287,6 +286,28 @@ socket.onmessage = async function(event) {
             }
 
             vBids.innerHTML = bidsContent;
+            return;
+        }
+        case 'initWithdrawal': {
+            await fromWallet.close({
+                ...channelState,
+                hisSignature: tonweb.utils.base64ToBytes(data.signature)
+            }).send(toNano('0.05'));
+            let destAddr = (await provider.send('ton_requestAccounts'))[0];
+            initStatus = 'closed';
+            serviceInterval = setInterval(async () => {
+                if ((new BN(await tonweb.getBalance(walletAddress))).gte(channelState.balanceB)) {
+                    await wallet.methods.transfer({
+                        secretKey: keyPair.secretKey,
+                        toAddress: destAddr,
+                        amount: toNano('0.1'),
+                        seqno: await wallet.methods.seqno().call(),
+                        sendMode: 128
+                    }).send();
+                    alert('Funds was sent to ' + destAddr);
+                    clearInterval(serviceInterval);
+                }
+            }, 3000);
             return;
         }
     }
