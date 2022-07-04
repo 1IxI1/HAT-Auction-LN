@@ -107,7 +107,7 @@ async function create_channel(data) {
         seqnoB: new BN(0)
     }
     let channelConfig = {
-        channelId: new BN(users[data.token].channelId),
+        channelId: new BN(users[data.token].channelId.toString()),
         addressA: walletAddressA,
         addressB: walletAddressB,
         initBalanceA: channelInitState.balanceA,
@@ -161,7 +161,7 @@ wss.on('connection', (ws) => {
             users[token] = {
                 'ws': ws,
                 'publicKey': tonweb.utils.base64ToBytes(data.publicKey),
-                'channelId': Math.round(Math.random() * 9999999999999999)
+                'channelId': parseInt(Math.round(Math.random() * 9999999999999999))
             }
             users[token].wallet = tonweb.wallet.create({publicKey: users[token].publicKey});
             users[token].walletAddress = await users[token].wallet.getAddress();
