@@ -38,6 +38,11 @@ async function update() {
             vWalletAddress.innerHTML = 'Your auction wallet (like B or C):<br><code>' + walletAddress.toString(true, true, true) + '</code><br>It\'s balance: <b>' + parseFloat(fromNano(balance)).toFixed(2) + (initStatus === 'success' ? (' (+' + parseFloat(fromNano(channelState.balanceB).toString()).toFixed(2) + ' locked)') : '') + ' TON</b> ' + ((initStatus === 'success') ? '🟩' : '🟥');
 
             if (wsToken && channel == null && initStatus !== 'topUp' && balance > 200000000) {
+                if (!(await wallet.methods.seqno().call())) {
+                    await wallet.deploy(keyPair.secretKey).send();
+                    setTimeout(update, 3000);
+                    return;
+                }
                 channelInitState = {
                     balanceA: new BN(0),
                     balanceB: new BN(balance - 200000000),
@@ -77,7 +82,7 @@ async function update() {
                 })
             }
             else if (wsToken && channel && initStatus === 'open' && balance > 500000000) {
-                await customBeforeUnload();
+                await customBeforeUnload(false);
                 window.location.reload();
             }
             else if (initStatus === "deploy") {
@@ -154,24 +159,28 @@ async function placeBid() {
 
 
     let bid = toNano(bidAmountInput.value);
+    if (bid.gt(channelState.balanceB)) {
+        alert('Your bid is bigger than your balance');
+        return;
+    }
     if (bids.length) {
-        if ((new BN(bids[bids.length - 1].amount)).gt(bid)) {
+        if ((new BN(bids[bids.length - 1].amount)).gte(bid)) {
             alert('Bid amount must be greater than previous');
             return;
         }
-        if (bids[bids.length - 1].amount == myBid) {
+        if (myBid == bids[bids.length - 1].amount) {
             alert('You already placed this bid');
             return;
         }
     }
 
-    channelState = {
+    let temporaryChannelState = {
         balanceA: channelState.balanceA.add(bid),
         balanceB: channelState.balanceB.sub(bid),
         seqnoA: channelState.seqnoA,
         seqnoB: channelState.seqnoB.add(new BN(1))
     };
-    let signature = await channel.signState(channelState);
+    let signature = await channel.signState(temporaryChannelState);
     send_json({
         type: 'placeBid',
         amount: bid.toString(),
@@ -187,13 +196,27 @@ async function placeBid() {
 //     })
 // }
 
+function onTonReady() {
+    console.log('tonready');
+
+    if (!window.tonProtocolVersion || window.tonProtocolVersion < 1) {
+        alert('Please update your TON Wallet Extension');
+        return;
+    }
+
+    const provider = window.ton;
+    console.log('isTonWallet=', provider.isTonWallet);
+
+
+}
+
 $(document).ready(async function() {
     placeBidButton.onclick = placeBid;
+    depositButton.onclick = () => { window.open('ton://transfer/' + walletAddress.toString(true, true, true), '_blank').focus(); };
     // withdrawalAllButton.onclick = withdrawalAll;
     console.log(tonweb);
     if (!(await wallet.methods.seqno().call())) {
-        console.log('Deploy wallet..')
-        await wallet.deploy(keyPair.secretKey).send();
+        console.log('Deploy wallet..');
     }
     console.log(wallet);
     walletAddress = await wallet.getAddress();
@@ -201,6 +224,11 @@ $(document).ready(async function() {
     console.log(walletAddress.toString(true, true, true));
     update();
     setInterval(() => {update();}, 10000);
+    if (window.ton) {
+        onTonReady();
+    } else {
+        window.addEventListener('tonready', () => onTonReady(), false);
+    }
 });
 
 socket.onmessage = async function(event) {
@@ -231,6 +259,11 @@ socket.onmessage = async function(event) {
         case 'unfreezeBid': {
             serverSignature = tonweb.utils.base64ToBytes(data.signature);
             channelState.seqnoA = channelState.seqnoA.add(new BN(1));
+            return;
+        }
+        case 'upSeqno': {
+            channelState.seqnoA = new BN(data.seqnoA);
+            channelState.seqnoB = new BN(data.seqnoB);
             return;
         }
         case 'bidsList': {
@@ -267,8 +300,13 @@ socket.onclose = function() {
     console.log('Use this for uncooperative close payment channel')
 }
 
-async function customBeforeUnload() {
+async function customBeforeUnload(alertEnabled) {
     if (initStatus === 'success') {
+        if (channelState.balanceA.toString() != '0') {
+            alert('You bid is freezed. If close page, you will lose bid amount');
+            return false;
+        }
+
         channelState.seqnoA = channelState.seqnoA.add(new BN(1));
         channelState.seqnoB = channelState.seqnoB.add(new BN(1));
         console.log(channelState);

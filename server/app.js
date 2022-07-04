@@ -14,6 +14,7 @@ const server = new https.createServer({
   key: fs.readFileSync('/etc/letsencrypt/live/auction.ex-ton.org/privkey.pem')
 });
 const wss = new WebSocket.Server({server});
+// const wss = new WebSocket.Server({port: 8080});
 
 // Wallet
 console.log(process.env.SERVICE_SEED);
@@ -21,6 +22,12 @@ const keyPair = tonweb.utils.keyPairFromSeed(
     tonweb.utils.base64ToBytes(process.env.SERVICE_SEED)
 );
 const wallet = tonweb.wallet.create({publicKey: keyPair.publicKey});
+let serviceWalletAddress;
+wallet.getAddress()
+    .then(async (address) => {
+        serviceWalletAddress = address;
+        console.log('Service wallet address: ' + serviceWalletAddress.toString(true, true, true));
+    }).catch((e) => console.log(e));
 
 // Global
 let users = {};
@@ -187,17 +194,30 @@ wss.on('connection', (ws) => {
                 let channelSumValue = users[data.token].channelInitState.balanceA.add(
                     users[data.token].channelInitState.balanceB
                 );
-                users[data.token].channelState = {
+                if (channelSumValue.sub(new BN(data.amount)).lt(new BN(0))) {
+                    send_json(ws, {error: 'Not enough balance'});
+                    return;
+                }
+
+                let temporaryChannelState = {
                     balanceA: new BN(data.amount),
-                    balanceB: new BN(channelSumValue.sub(new BN(data.amount))),
+                    balanceB: channelSumValue.sub(new BN(data.amount)),
                     seqnoA: users[data.token].channelState.seqnoA,
                     seqnoB: users[data.token].channelState.seqnoB.add((new BN(1)))
                 }
-                if (!(await users[data.token].channel.verifyState(users[data.token].channelState, tonweb.utils.base64ToBytes(data.signature)))) {
+                if (!(await users[data.token].channel.verifyState(temporaryChannelState, tonweb.utils.base64ToBytes(data.signature)))) {
                     send_json(users[data.token].ws, {error: 'Invalid signature'});
                     return;
                 }
                 let signature = await users[data.token].channel.signState(users[data.token].channelState);
+
+                users[data.token].channelState = temporaryChannelState;
+                send_json(users[data.token].ws, {
+                    type: 'upSeqno',
+                    seqnoA: temporaryChannelState.seqnoA.toString(),
+                    seqnoB: temporaryChannelState.seqnoB.toString(),
+                });
+
                 bids.push({
                     token: data.token,
                     amount: data.amount
