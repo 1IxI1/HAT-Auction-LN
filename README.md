@@ -1,2 +1,4 @@
 # HAT-Auction-LN
-Hack-A-TON Auction System using Lightning Network
+Auction System using Lightning Network prepared for Hack-A-TON.
+
+### [Website](https://auction.ex-ton.org/)
