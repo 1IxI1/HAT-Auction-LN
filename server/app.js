@@ -251,8 +251,10 @@ wss.on('connection', (ws) => {
                 }).send(toNano('0.05'));
             }
             case 'initWithdrawal': {
-                users[data.token].channelState.seqnoA = users[data.token].channelState.seqnoA.add((new BN(1)));
-                users[data.token].channelState.seqnoB = users[data.token].channelState.seqnoB.add((new BN(1)));
+                try {
+                    users[data.token].channelState.seqnoA = users[data.token].channelState.seqnoA.add((new BN(1)));
+                    users[data.token].channelState.seqnoB = users[data.token].channelState.seqnoB.add((new BN(1)));
+                } catch (e) { console.log(e); }
                 up_state(data.token);
                 let signature = await users[data.token].channel.signClose(users[data.token].channelState);
                 send_json(users[data.token].ws, {
